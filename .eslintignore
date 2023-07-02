@@ -1,0 +1,12 @@
+# Third party
+**/node_modules
+
+*.css
+*.svg
+
+build/*
+public/*
+src/react-app-env.d.ts
+src/reportWebVitals.ts
+tailwind.config.js
+postcss.config.js
