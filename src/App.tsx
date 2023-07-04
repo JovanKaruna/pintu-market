@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react'
 import ToggleThemeButton from './components/buttons/ToggleThemeButton'
-import MarketService from './services/MarketService'
+import WalletService from './services/WalletService'
+import TradeService from './services/TradeService'
 
 const App: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const a = async () => {
     try {
-      const a = await MarketService.getWallet()
-
+      const a = await WalletService.getSupportedCurrencies()
       console.log(a)
+      const b = await TradeService.getPriceChanges()
+      console.log(b)
     } catch (e) {
       console.log(e)
     }
