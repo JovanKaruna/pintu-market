@@ -1,13 +1,34 @@
 import React from 'react'
 import { Table, Segment } from 'semantic-ui-react'
+import { type MarketTableData } from '../../types'
+import { formatRupiah, isMinus } from '../../utils/utils'
 
-const MarketTable = (): JSX.Element => {
+interface TableProps {
+  data: MarketTableData[]
+}
+
+const MarketTable = ({ data }: TableProps): JSX.Element => {
+  const createPercentage = (number: string): JSX.Element => {
+    const minus = isMinus(number)
+    return (
+      <div className={minus ? 'text-red-error' : 'text-green'}>
+        <i
+          className={`${
+            minus ? 'red-error caret down' : 'green caret up'
+          } icon`}
+        />
+        {minus ? number.substring(1) : number}%
+      </div>
+    )
+  }
   return (
     <Segment className="overflow-x-scroll lg:overflow-x-visible" basic>
-      <Table className="min-w-80vh" padded="very" compact unstackable>
+      <Table className="min-w-90vh" padded="very" compact unstackable>
         <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>CRYPTO</Table.HeaderCell>
+          <Table.Row className="h-20 text-xl font-bold">
+            <Table.HeaderCell>
+              <div className="ml-20">CRYPTO</div>
+            </Table.HeaderCell>
             <Table.HeaderCell>HARGA</Table.HeaderCell>
             <Table.HeaderCell>24 JAM</Table.HeaderCell>
             <Table.HeaderCell>1 MGG</Table.HeaderCell>
@@ -17,25 +38,36 @@ const MarketTable = (): JSX.Element => {
         </Table.Header>
 
         <Table.Body>
-          <Table.Row>
-            <Table.Cell>
-              <div className="w-full flex justify-between">
-                <div>
-                  <img
-                    src={
-                      'https://s3.ap-southeast-1.amazonaws.com/static.pintu.co.id/assets/images/logo/blockchain/Bitcoin.svg'
-                    }
-                  />
-                </div>
-                <div>BTC</div>
-              </div>
-            </Table.Cell>
-            <Table.Cell>Rp.1</Table.Cell>
-            <Table.Cell>1%</Table.Cell>
-            <Table.Cell>1%</Table.Cell>
-            <Table.Cell>1%</Table.Cell>
-            <Table.Cell></Table.Cell>
-          </Table.Row>
+          {data.length > 0 ? (
+            data.map((value, index) => {
+              return (
+                <Table.Row className="h-20 text-lg font-bold" key={index}>
+                  <Table.Cell>
+                    <div className="flex justify-between">
+                      <div className="flex items-center gap-10">
+                        <img className="w-10" src={value.logo} />
+                        <div>{value.name}</div>
+                      </div>
+                      <div className="flex items-center">
+                        {value.currencySymbol}
+                      </div>
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell className="text-lg font-bold">
+                    {formatRupiah(value.latestPrice)}
+                  </Table.Cell>
+                  <Table.Cell>{createPercentage(value.day)}</Table.Cell>
+                  <Table.Cell>{createPercentage(value.week)}</Table.Cell>
+                  <Table.Cell>{createPercentage(value.month)}</Table.Cell>
+                  <Table.Cell>{createPercentage(value.year)}</Table.Cell>
+                </Table.Row>
+              )
+            })
+          ) : (
+            <Table.Row>
+              <Table.Cell>No Data Found</Table.Cell>
+            </Table.Row>
+          )}
         </Table.Body>
       </Table>
     </Segment>

@@ -41,3 +41,14 @@ export interface Wallet {
   blockchainName: string
   logo: string
 }
+
+export interface MarketTableData {
+  logo: string
+  currencySymbol: string
+  name: string
+  latestPrice: string
+  day: string
+  week: string
+  month: string
+  year: string
+}
