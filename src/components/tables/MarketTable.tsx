@@ -1,6 +1,7 @@
 import React from 'react'
 import { Table, Segment } from 'semantic-ui-react'
 import { type MarketTableData } from '../../types'
+import { useNavigate } from 'react-router-dom'
 import { formatRupiah, isMinus } from '../../utils/utils'
 
 interface TableProps {
@@ -8,6 +9,7 @@ interface TableProps {
 }
 
 const MarketTable = ({ data }: TableProps): JSX.Element => {
+  const navigate = useNavigate()
   const createPercentage = (number: string): JSX.Element => {
     const minus = isMinus(number)
     return (
@@ -21,6 +23,7 @@ const MarketTable = ({ data }: TableProps): JSX.Element => {
       </div>
     )
   }
+
   return (
     <Segment className="overflow-x-scroll lg:overflow-x-visible" basic>
       <Table className="min-w-90vh" padded="very" compact unstackable>
@@ -41,8 +44,16 @@ const MarketTable = ({ data }: TableProps): JSX.Element => {
           {data.length > 0 ? (
             data.map((value, index) => {
               return (
-                <Table.Row className="h-20 text-lg font-bold" key={index}>
-                  <Table.Cell>
+                <Table.Row
+                  className="h-20 text-base md:text-lg font-bold"
+                  key={index}
+                >
+                  <Table.Cell
+                    className="hover:cursor-pointer"
+                    onClick={() => {
+                      navigate(`/market/${value.currencySymbol.toLowerCase()}`)
+                    }}
+                  >
                     <div className="flex justify-between">
                       <div className="flex items-center gap-10">
                         <img className="w-10" src={value.logo} />

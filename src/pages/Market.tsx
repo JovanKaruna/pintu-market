@@ -6,13 +6,20 @@ import { useQuery } from 'react-query'
 import {
   type PriceChangesItem,
   type Currency,
-  type MarketTableData
+  type MarketTableData,
+  type DropdownOption
 } from '../types'
+import Layout from '../components/Layout'
+import { Dropdown } from 'semantic-ui-react'
+import { useNavigate } from 'react-router-dom'
 
 const Market = (): JSX.Element => {
   const [currencies, setCurrencies] = useState<Currency[]>([])
   const [prices, setPrices] = useState<PriceChangesItem[]>([])
   const [data, setData] = useState<MarketTableData[]>([])
+  const [searchOption, setSearchOption] = useState<DropdownOption[]>([])
+
+  const navigate = useNavigate()
 
   const { isLoading: isLoadingSupportedCurrencies } = useQuery(
     ['query-currencies'],
@@ -29,22 +36,22 @@ const Market = (): JSX.Element => {
       setPrices(data.payload)
     },
     {
-      refetchInterval: 10000
+      refetchInterval: 5000
     }
   )
 
   const createMarketTableData = (
-    prices: PriceChangesItem[],
-    currencies: Currency[]
+    currencies: Currency[],
+    prices: PriceChangesItem[]
   ): MarketTableData[] => {
     const data: MarketTableData[] = []
-    prices.forEach((price) => {
-      const tokenName = price.pair.split('/')[0]
-      const currency = currencies.find(
-        (currency) =>
-          currency.currencySymbol.toUpperCase() === tokenName.toUpperCase()
+    currencies.forEach((currency) => {
+      const price = prices.find(
+        (price) =>
+          currency.currencySymbol.toUpperCase() ===
+          price.pair.split('/')[0].toUpperCase()
       )
-      if (currency !== undefined) {
+      if (price !== undefined) {
         data.push({
           logo: currency.logo,
           currencySymbol: currency.currencySymbol,
@@ -60,18 +67,50 @@ const Market = (): JSX.Element => {
     return data
   }
 
+  const createSearchableData = (currencies: Currency[]): DropdownOption[] => {
+    const data: DropdownOption[] = []
+    currencies.forEach((currency) => {
+      data.push({
+        key: currency.currencySymbol,
+        text: currency.name,
+        value: currency.currencySymbol,
+        image: {
+          avatar: true,
+          src: currency.logo
+        }
+      })
+    })
+    return data
+  }
+
   useEffect(() => {
     if (currencies.length > 0 && prices.length > 0) {
-      setData(createMarketTableData(prices, currencies))
+      setData(createMarketTableData(currencies, prices))
     }
   }, [currencies, prices])
 
+  useEffect(() => {
+    if (currencies.length > 0) {
+      setSearchOption(createSearchableData(currencies))
+    }
+  }, [currencies])
+
   return (
-    <div className="">
-      <div>
+    <Layout>
+      <div className="flex justify-between items-center">
         <div className="text-2xl md:text-3xl font-bold text-black dark:text-white">
           Harga Crypto dalam Rupiah Hari Ini
         </div>
+        <Dropdown
+          onChange={(e, data) => {
+            navigate(`/market/${(data.value as string).toLowerCase()}`)
+          }}
+          placeholder="Cari aset di Pintu..."
+          search
+          selection
+          scrolling
+          options={searchOption}
+        />
       </div>
       {isLoadingSupportedCurrencies || isLoadingPrice ? (
         <div className="min-h-60vh flex justify-center items-center">
@@ -80,7 +119,7 @@ const Market = (): JSX.Element => {
       ) : (
         <MarketTable data={data} />
       )}
-    </div>
+    </Layout>
   )
 }
 
