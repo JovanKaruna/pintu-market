@@ -97,8 +97,8 @@ const Market = (): JSX.Element => {
 
   return (
     <Layout>
-      <div className="flex justify-between items-center">
-        <div className="text-2xl md:text-3xl font-bold text-black dark:text-white">
+      <div className="block sm:flex justify-between items-center">
+        <div className="text-2xl md:text-3xl font-bold text-black dark:text-white sm:pb-0 pb-5">
           Harga Crypto dalam Rupiah Hari Ini
         </div>
         <Dropdown

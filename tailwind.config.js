@@ -80,7 +80,7 @@ module.exports = {
   },
   variants: {
     extend: {
-      animation:['hover']
+      animation:['hover', 'focus']
     },
   },
   plugins: [],
