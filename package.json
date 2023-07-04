@@ -1,6 +1,19 @@
 {
   "name": "pintu-market",
   "version": "0.1.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Chrome disable-web-security",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "runtimeArgs": [
+        "--disable-web-security",
+        "--user-data-dir=~/ChromeUserData/"
+      ]
+    }
+  ],
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -10,8 +23,10 @@
     "@types/node": "^16.18.38",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
+    "axios": "^0.22.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-query": "^3.39.3",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
