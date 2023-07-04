@@ -37,6 +37,7 @@
     "import/prefer-default-export": "off",
     "react/prop-types": "off",
     "max-lines": ["error", 1000],
-    "no-console": ["warn", { "allow": ["warn", "error", "info"] }]
+    "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+    "multiline-ternary": "off"
   }
 }
